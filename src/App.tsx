@@ -10,7 +10,8 @@ import UserTable from './components/AdminDashBoard/UserTable';
 
 function App() {
   const defaultUserTableData = SampleData();
-  const pageDetails={limitOfPagination:5,totalPages:10}
+  
+  const pageDetails={limitOfPagination:5,totalPages:4}
   const userDetails={
     defaultUserTableData:defaultUserTableData,
     pageDetails:pageDetails

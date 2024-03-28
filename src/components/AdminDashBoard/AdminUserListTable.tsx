@@ -14,7 +14,7 @@ interface UserData {
 }
 
 export default function AdminUserListTable(props: UserData) {
-
+  // console.log(props);
   const { headings, users } = props;
   return (
     <div>

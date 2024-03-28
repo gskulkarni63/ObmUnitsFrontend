@@ -5,17 +5,22 @@ import Deque from "../service/Deque";
 
 interface pageDetails{
   limitOfPagination:number,
-  totalPages:number
+  totalPages:number,
+  activePage:number,
+  changeActivePage:(activePage:number)=>void,
+  actionWhenNextClicked:(activePage:number)=>Array<number>
 }
 
 export default function TablePagination(props:pageDetails) {
-  const [activePage, changeActivePage] = useState(1);
+  
+  // const [activePage, changeActivePage] = useState(1);
   const [pageQ, changePageQ] = useState<Deque<number>>(new Deque<number>());
 
-  const {limitOfPagination,totalPages}=props
+  const {limitOfPagination,totalPages,activePage,changeActivePage}=props
   // Initialize the pageQ
   useEffect(() => {
     changeActivePage(1);
+
     const pageQueue = new Deque<number>();
     for (let i = 1; i <= limitOfPagination; i++) {
       pageQueue.addEnd(i);
@@ -33,8 +38,9 @@ export default function TablePagination(props:pageDetails) {
       pageQueue.addFront(pageQueue.peekFront() - 1);
       pageQueue.removeEnd();
     }
-    console.log(pageQueue);
+
     changePageQ(pageQueue);
+
   };
 
   // If prevButton is Clicked
@@ -47,16 +53,40 @@ export default function TablePagination(props:pageDetails) {
       pageQueue.addEnd(pageQueue.peekEnd() + 1);
       pageQueue.removeFront();
     }
-    console.log(pageQueue);
+
     changePageQ(pageQueue);
+
   };
+
+  const handleFirstButton=()=>{
+    changeActivePage(1);
+    const pageQueue = new Deque<number>();
+    for (let i = 1; i <= limitOfPagination; i++) {
+      pageQueue.addEnd(i);
+    }
+    changePageQ(pageQueue);
+
+  };
+
+  const handleLastButton=()=>{
+    changeActivePage(totalPages);
+    const pageQueue = new Deque<number>();
+    for(let i=totalPages-limitOfPagination+1;i<=totalPages;i++){
+      pageQueue.addEnd(i);
+    }
+    changePageQ(pageQueue);
+
+  }
+
+
+
 
   return (
     <div>
       <Pagination>
         <Pagination.First
           onClick={() => {
-            changeActivePage(1);
+            handleFirstButton();
           }}
         />
         <Pagination.Prev
@@ -75,7 +105,7 @@ export default function TablePagination(props:pageDetails) {
         />
         <Pagination.Last
           onClick={() => {
-            changeActivePage(limitOfPagination);
+            handleLastButton();
           }}
         />
       </Pagination>
